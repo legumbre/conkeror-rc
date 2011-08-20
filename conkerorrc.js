@@ -6,6 +6,7 @@ url_remoting_fn=load_url_in_new_buffer;
 download_buffer_automatic_open_target = OPEN_NEW_BUFFER_BACKGROUND;
 // don't let C-x k kill the last buffer and conkeror
 can_kill_last_buffer=false;
+
 // url completion
 // url_completion_use_history = true;
 url_completion_use_bookmarks = false;
@@ -24,21 +25,6 @@ define_key(content_buffer_normal_keymap, "x", "execute-extended-command");
 
 // misc bindings
 define_key(content_buffer_normal_keymap, "C-x 4 f", "follow-new-buffer");
-
-
-// page modes loading and customization
-
-// google search results page mode
-require("google-search-results");
-google_search_bind_number_shortcuts();
-
-// gmail, rebind conflictiing conkeror commands with the C-c prefix
-require("gmail");
-
-// github page mode
-require('page-modes/github.js');
-undefine_key(github_keymap, "c");
-define_key(github_keymap, "c", "copy");
 
 // delicious posting
 interactive("delicious-post",
