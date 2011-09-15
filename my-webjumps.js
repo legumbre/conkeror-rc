@@ -1,5 +1,6 @@
 // webjumps
 define_webjump("hn"     , "http://news.ycombinator.com");
+define_webjump("hub"    , "http://github.com");
 define_webjump("mg"     , "https://gist.github.com/mine");
 define_webjump("meebo"  , "https://meebo.com/messenger");
 define_webjump("mw"     , "http://www.merriam-webster.com/dictionary/%s");
