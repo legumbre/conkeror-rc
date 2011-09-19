@@ -7,4 +7,5 @@ define_webjump("mw"     , "http://www.merriam-webster.com/dictionary/%s");
 define_webjump("proggit", "http://reddit.com/r/programming");
 define_webjump("rae"    , "http://rae.es/%s");
 define_webjump("smg"    , "http://www.google.com/search?q=site%3Agist.github.com+legumbre+%s");
+define_webjump("tpb"    , "https://thepiratebay.org/search/%s");
 
