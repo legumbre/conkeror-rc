@@ -26,12 +26,12 @@ define_key(content_buffer_normal_keymap, "x", "execute-extended-command");
 // misc bindings
 define_key(content_buffer_normal_keymap, "C-x 4 f", "follow-new-buffer");
 
-// delicious posting
-interactive("delicious-post",
-            "bookmark the page via delicious",
+// pinboard posting
+interactive("pinboard-post",
+            "bookmark the page via pinboard",
             function (I) {
                 check_buffer(I.buffer, content_buffer);
-                let posturl = 'https://api.del.icio.us/v1/posts/add?&url=' +
+                let posturl = 'https:///api.pinboard.in/v1/posts/add?&url=' +
                     encodeURIComponent(
                         load_spec_uri_string(
                             load_spec(I.buffer.top_frame))) +
@@ -55,7 +55,7 @@ interactive("delicious-post",
                     I.window.minibuffer.message(content.responseText);
                 } catch (e) { }
             });
-define_key(default_global_keymap, "p", "delicious-post");
+define_key(default_global_keymap, "p", "pinboard-post");
 
 // current url QR code
 interactive("qrcode", "Open QR code of current URL.",
