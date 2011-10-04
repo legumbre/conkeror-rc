@@ -51,7 +51,7 @@ register_user_stylesheet(
             "@-moz-document url-prefix(http://pinboard.in/) {" +
                 ".current {" +
                 " background-color: #FFFFCC !important;" +
-                " border: 1px dotted #C41 !important;"+
+                " // border: 1px dotted #C41 !important;"+
                 " border-right: 2px solid #C41 !important;"+
                 "}" +
                 ".private {" +
@@ -97,6 +97,28 @@ function _pinboard_focus_selected(I, el) {
     el.scrollIntoView();
 }
 
+/**
+ * _on_pinboard_load will be called once the page is done loading.
+ */
+function _on_pinboard_load(buffer)
+{
+  _pinboard_fix_link_rel(buffer);
+}
+
+/**
+ * Add link rel="next" and rel="prev" to "later" and "earlier" links
+ * TODO: This should not be necessary once pinboard.in fixes its html.
+ */
+function _pinboard_fix_link_rel(buffer)
+{
+  var prev_link = buffer.document.getElementById("top_earlier");
+  var next_link = buffer.document.getElementById("top_later");
+
+  if (prev_link) prev_link.setAttribute("rel", "prev");
+  if (next_link) next_link.setAttribute("rel", "next");
+}
+
+
 /*
  * Interactive commands
  */
@@ -123,14 +145,23 @@ var pinboard_modality = {
 };
 
 define_page_mode("pinboard_mode", $display_name = "Pinboard",
+
                  $enable = function (buffer) {
                    buffer.content_modalities.push(pinboard_modality);
+                   
+                   // register hooks
+                   add_hook.call(buffer, "buffer_dom_content_loaded_hook", _on_pinboard_load);
                  },
+
                  $disable = function (buffer) {
+                   // unregister hooks
+                   remove_hook.call(buffer, "buffer_dom_content_loaded_hook", _on_pinboard_load);
+                   
                    var i = buffer.content_modalities.indexOf(pinboard_modality);
                    if (i > -1)
                      buffer.content_modalities.splice(i, 1);
                  },
+
                  $doc = "Pinboard page-mode: navigation for Pinboard bookmarks." );
 
 let (pinboard_re = build_url_regex($domain = "pinboard",
@@ -140,3 +171,7 @@ let (pinboard_re = build_url_regex($domain = "pinboard",
 }
 
 provide("pinboard");
+
+// Local Variables:
+// js-indent-level: 2
+// End:
