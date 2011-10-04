@@ -8,8 +8,6 @@
  * shortcuts (under settings). They clash with Conkeror anyway.
  * 
  * TODO: 
- * - Implement page navigation ala rel="next"/"prev" (until
- *   pinboard.in fixes the links)
  * - Implement update commands (star, edit tags, etc.)
  * - Allow to opt between cirular bookmark motion and automatic next/prev page navigation
  * - Use a different color or some better way to highlight private bookmarks.
@@ -97,8 +95,8 @@ function _pinboard_focus_selected(I, el) {
     el.scrollIntoView();
 }
 
-/**
- * _on_pinboard_load will be called once the page is done loading.
+/*
+ * _on_pinboard_load will be called by the page-mode's $enable callback
  */
 function _on_pinboard_load(buffer)
 {
@@ -149,8 +147,13 @@ define_page_mode("pinboard_mode", $display_name = "Pinboard",
                  $enable = function (buffer) {
                    buffer.content_modalities.push(pinboard_modality);
                    
-                   // register hooks
-                   add_hook.call(buffer, "buffer_dom_content_loaded_hook", _on_pinboard_load);
+                   if (buffer.browser.webProgress.isLoadingDocument)
+                     /* arrange so that _on_pinboard_load callback is
+                        called once the document is done loading. */
+                     add_hook.call(buffer, "buffer_dom_content_loaded_hook", _on_pinboard_load);
+                   else
+                     // call it right now
+                     _on_pinboard_load(buffer);
                  },
 
                  $disable = function (buffer) {
