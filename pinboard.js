@@ -150,15 +150,17 @@ define_page_mode("pinboard_mode", $display_name = "Pinboard",
                    if (buffer.browser.webProgress.isLoadingDocument)
                      /* arrange so that _on_pinboard_load callback is
                         called once the document is done loading. */
-                     add_hook.call(buffer, "buffer_dom_content_loaded_hook", _on_pinboard_load);
+                     add_hook.call(buffer, "buffer_loaded_hook", _on_pinboard_load);
                    else
-                     // call it right now
+                     /* call it right now in case the page-mode
+                      * document is already loaded (ie, someone M-x
+                      * pinboard-mode manually) */
                      _on_pinboard_load(buffer);
                  },
 
                  $disable = function (buffer) {
                    // unregister hooks
-                   remove_hook.call(buffer, "buffer_dom_content_loaded_hook", _on_pinboard_load);
+                   remove_hook.call(buffer, "buffer_loaded_hook", _on_pinboard_load);
                    
                    var i = buffer.content_modalities.indexOf(pinboard_modality);
                    if (i > -1)
