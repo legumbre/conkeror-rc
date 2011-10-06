@@ -1,5 +1,28 @@
 // -*- mode: js; -*-
 
+/** mozrepl init
+
+    REMEMBER: to create ~/.mozrepl-conkeror.js:
+    var conkeror = Cc["@conkeror.mozdev.org/application;1"].getService().wrappedJSObject;
+    this.enter(conkeror);
+
+    Reference:
+    http://conkeror.org/MozRepl
+    https://github.com/bard/mozrepl/wiki
+    https://github.com/bard/mozrepl/wiki/Use-with-Conkeror
+ */
+let (mozrepl_init = get_home_directory()) {
+    mozrepl_init.appendRelativePath(".mozrepl-conkeror.js");
+    session_pref('extensions.mozrepl.initUrl', make_uri(mozrepl_init).spec);
+}
+/* start mozrepl */
+if ('@hyperstruct.net/mozlab/mozrepl;1' in Cc) {
+  var mozrepl = Cc['@hyperstruct.net/mozlab/mozrepl;1']
+    .getService(Ci.nsIMozRepl);
+  if (! mozrepl.isActive())
+    mozrepl.start(4242);
+}
+
 // open urls in new buffers
 url_remoting_fn=load_url_in_new_buffer;
 // don't use a new window for downloads
