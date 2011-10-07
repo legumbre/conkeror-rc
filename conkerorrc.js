@@ -70,8 +70,8 @@ interactive("pinboard-post",
                     '&extended=' +
                     encodeURIComponent(
                         yield I.minibuffer.read(
-                        $prompt = "extended description: "));
-
+                            $prompt = "extended description: ",
+                            $initial_value = I.buffer.top_frame.getSelection()));
                 try {
                     var content = yield send_http_request(
                         load_spec({uri: posturl}));
