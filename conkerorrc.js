@@ -90,6 +90,8 @@ interactive("qrcode", "Open QR code of current URL.",
             });
 define_key(content_buffer_normal_keymap, "Z", "qrcode");
 
+// xkcd alt text
+xkcd_add_title=true;
 
 // misc commands
 
