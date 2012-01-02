@@ -53,30 +53,29 @@ define_key(content_buffer_normal_keymap, "C-x 4 f", "follow-new-buffer");
 interactive("pinboard-post",
             "bookmark the page via pinboard",
             function (I) {
-                check_buffer(I.buffer, content_buffer);
-                let posturl = 'https:///api.pinboard.in/v1/posts/add?&url=' +
-                    encodeURIComponent(
-                        load_spec_uri_string(
-                            load_spec(I.buffer.top_frame))) +
-                    '&description=' +
-                    encodeURIComponent(
-                        yield I.minibuffer.read(
-                            $prompt = "name (required): ",
-                            $initial_value = I.buffer.title)) +
-                    '&tags=' +
-                    encodeURIComponent(
-                        yield I.minibuffer.read(
-                            $prompt = "tags (space delimited): ")) +
-                    '&extended=' +
-                    encodeURIComponent(
-                        yield I.minibuffer.read(
-                            $prompt = "extended description: ",
-                            $initial_value = I.buffer.top_frame.getSelection()));
-                try {
-                    var content = yield send_http_request(
-                        load_spec({uri: posturl}));
-                    I.window.minibuffer.message(content.responseText);
-                } catch (e) { }
+              check_buffer(I.buffer, content_buffer);
+              let posturl = 'https:///api.pinboard.in/v1/posts/add';
+              let url = load_spec_uri_string(load_spec(I.buffer.top_frame));
+              let description = yield I.minibuffer.read( $prompt = "name (required): ",
+                                                         $initial_value = I.buffer.title);
+              let tags = yield I.minibuffer.read( $prompt = "tags (space delimited): ");
+              let extended =  yield I.minibuffer.read( $prompt = "extended description: ",
+                                                       $initial_value = I.buffer.top_frame.getSelection());
+
+              // use the 'toread' tag to mark this post as 'to read'
+              let toread = (tags.split(" ").indexOf("toread") < 0) ? "no" : "yes";
+
+              posturl = posturl + '?' +
+                '&url=' + encodeURIComponent(url) +
+                '&description=' + encodeURIComponent(description) +
+                '&tags=' + encodeURIComponent(tags) +
+                '&extended=' + encodeURIComponent(extended) +
+                '&toread=' + encodeURIComponent(toread);
+              try {
+                var content = yield send_http_request(
+                  load_spec({uri: posturl}));
+                I.window.minibuffer.message(content.responseText);
+              } catch (e) { }
             });
 define_key(default_global_keymap, "p", "pinboard-post");
 
