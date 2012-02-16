@@ -136,7 +136,3 @@ define_page_mode("hackernews_mode",
 
 page_mode_activate(hackernews_mode);
 provide("hackernews");
-
-// Local Variables:
-// js-indent-level: 2
-// End:
