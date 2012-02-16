@@ -10,3 +10,5 @@ Set the conkeror.rcfile to the repo directory, conkeror will attempt to load all
    M-x reinit
 
 Done!
+
+Note: page-modes require Conkeror 1.0
