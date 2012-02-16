@@ -9,7 +9,6 @@
  *
  **/
 
-in_module(null);
 require("content-buffer.js");
 
 /*
@@ -107,9 +106,11 @@ var hackernews_modality = {
   normal: hackernews_keymap
 };
 
-define_page_mode("hackernews_mode", $display_name = "Hacker News",
-
-                 $enable = function (buffer) {
+define_page_mode("hackernews_mode", 
+                 build_url_regexp($domain = "news.ycombinator",
+                                  $allow_www = true,
+                                  $tlds = ["com"]),
+                 function enable(buffer) {
                    buffer.content_modalities.push(hackernews_modality);
                    
                    if (buffer.browser.webProgress.isLoadingDocument)
@@ -122,8 +123,7 @@ define_page_mode("hackernews_mode", $display_name = "Hacker News",
                       * hackernews-mode manually) */
                      _on_hackernews_load(buffer);
                  },
-
-                 $disable = function (buffer) {
+                 function disable(buffer) {
                    // unregister hooks
                    remove_hook.call(buffer, "buffer_loaded_hook", _on_hackernews_load);
                    
@@ -131,15 +131,10 @@ define_page_mode("hackernews_mode", $display_name = "Hacker News",
                    if (i > -1)
                      buffer.content_modalities.splice(i, 1);
                  },
-
+                 $display_name = "Hacker News",
                  $doc = "Hacker News page-mode: navigation for Hacker News." );
 
-let (hackernews_re = build_url_regex($domain = "news.ycombinator",
-                                   $allow_www = true,
-                                   $tlds = ["com"])) {
-  auto_mode_list.push([hackernews_re, hackernews_mode]);
-}
-
+page_mode_activate(hackernews_mode);
 provide("hackernews");
 
 // Local Variables:
