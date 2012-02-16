@@ -14,7 +14,6 @@
  * 
  **/
 
-in_module(null);
 require("content-buffer.js");
 
 /* default Pinboard keys (IGNORE THIS FOR NOW).
@@ -142,9 +141,11 @@ var pinboard_modality = {
   normal: pinboard_keymap
 };
 
-define_page_mode("pinboard_mode", $display_name = "Pinboard",
-
-                 $enable = function (buffer) {
+define_page_mode("pinboard_mode", 
+                 build_url_regexp($domain = "pinboard",
+                                  $allow_www = true,
+                                  $tlds = ["in"]),
+                 function enable(buffer) {
                    buffer.content_modalities.push(pinboard_modality);
                    
                    if (buffer.browser.webProgress.isLoadingDocument)
@@ -157,8 +158,7 @@ define_page_mode("pinboard_mode", $display_name = "Pinboard",
                       * pinboard-mode manually) */
                      _on_pinboard_load(buffer);
                  },
-
-                 $disable = function (buffer) {
+                 function disable(buffer) {
                    // unregister hooks
                    remove_hook.call(buffer, "buffer_loaded_hook", _on_pinboard_load);
                    
@@ -166,15 +166,10 @@ define_page_mode("pinboard_mode", $display_name = "Pinboard",
                    if (i > -1)
                      buffer.content_modalities.splice(i, 1);
                  },
-
+                 $display_name = "Pinboard",
                  $doc = "Pinboard page-mode: navigation for Pinboard bookmarks." );
 
-let (pinboard_re = build_url_regex($domain = "pinboard",
-                                   $allow_www = true,
-                                   $tlds = ["in"])) {
-  auto_mode_list.push([pinboard_re, pinboard_mode]);
-}
-
+page_mode_activate(pinboard_mode);
 provide("pinboard");
 
 // Local Variables:
