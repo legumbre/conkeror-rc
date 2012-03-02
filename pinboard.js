@@ -171,7 +171,3 @@ define_page_mode("pinboard_mode",
 
 page_mode_activate(pinboard_mode);
 provide("pinboard");
-
-// Local Variables:
-// js-indent-level: 2
-// End:
