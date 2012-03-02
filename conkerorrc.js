@@ -91,6 +91,25 @@ interactive("qrcode", "Open QR code of current URL.",
             });
 define_key(content_buffer_normal_keymap, "Z", "qrcode");
 
+/* proxy configuration commands */
+interactive("proxy-fing",
+            "Toggle proxy.fing.edu.uy configuration",
+            function (I) {
+              proxy_set_host("proxy.fing.edu.uy");
+              proxy_set_port(3128);
+              user_pref("network.proxy.type", 0);
+              co_call(call_interactively(I, "proxy-toggle"));
+            });
+
+interactive("proxy-ec2",
+            "Toggle EC2 proxy configuration",
+            function(I) {
+              proxy_set_host("10.10.10.1");
+              proxy_set_port(3128);
+              user_pref("network.proxy.type", 0);
+              co_call(call_interactively(I, "proxy-toggle"));
+            });
+
 // xkcd alt text
 xkcd_add_title=true;
 
