@@ -42,6 +42,9 @@ require("favicon");
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
 read_buffer_show_icons = true;
 
+// show buffer count in modeline
+add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
+
 // conkeror on mac X11 meta workaround
 define_key(default_global_keymap, "x", "execute-extended-command");
 define_key(content_buffer_normal_keymap, "x", "execute-extended-command");
