@@ -24,30 +24,36 @@ register_user_stylesheet(
                 " // border: 1px dotted #C41 !important;"+
                 " font-weight: bold !important;"+
                 "}" +
+                ".current-comment {" +
+                " color: white !important;" +
+                " background-color: #C41 !important;" +
+                " border: 1px dotted #C41 !important;"+
+                " font-weight: bold !important;"+
+                "}" +
             "}"
 ));
 
 
 /*
- * Select the next item in a circular fashion, according to
- * `direction'. Selecting a post means adding the class "current"
- * to the selected td element.
+ * Select and return the next element among filtered nodes in a
+ * circular fashion, according to `direction'. Selecting a post means
+ * adding the class maker_class to the selected element.
  */
-function _hackernews_next(I, direction) {
-  var posts = Array.filter(I.buffer.document.getElementsByClassName("title"), function (p) { return p.getAttribute("align")!= "right" });
-  var cp = posts.filter(function (p) { return (p.className.indexOf("current") >= 0); });
+function _hackernews_next(I, dom_filter, direction, marker_class) {
+  var nodes = dom_filter(I);
+  // var nodes = Array.filter(I.buffer.document.getElementsByClassName("title"), function (p) { return p.getAttribute("align")!= "right" });
+  var cp = nodes.filter(function (p) { return (p.className.indexOf(marker_class) >= 0); });
 
-  var current = (cp.length != 0) ? cp[0] : posts[posts.length-1] ;
-  var nexti = (posts.indexOf(current) + direction) % posts.length
-  var next = posts[nexti]
+  var current = (cp.length != 0) ? cp[0] : nodes[nodes.length-1] ;
+  var nexti = (nodes.indexOf(current) + direction) % nodes.length
+  var next = nodes[nexti]
 
   if (current)
-    dom_remove_class(current, "current");
-  dom_add_class(next, "current");
+    dom_remove_class(current, marker_class);
+  dom_add_class(next, marker_class);
 
   return next;
 }
-
 
 function _hackernews_focus_selected(I, el) {
   var a = I.buffer.document.evaluate(
@@ -83,17 +89,41 @@ function _hackernews_fix_link_rel(buffer)
   if (more.singleNodeValue) more.singleNodeValue.setAttribute("rel", "next");
 }
 
+function _hackernews_post_filter(I)
+{
+  return Array.filter(I.buffer.document.getElementsByClassName("title"),
+                      function (p) { return p.getAttribute("align")!= "right" });
+}
+
+function _hackernews_comment_filter(I)
+{
+  return Array.filter(I.buffer.document.querySelectorAll("span.comhead a[href^=item]"),
+                      function (p) { return true });
+}
 
 /*
  * Interactive commands
  */
 interactive("hackernews-next-post",
-            "Highlight next hackernews item",
-            function (I) { _hackernews_focus_selected(I, _hackernews_next(I, 1 /* down */)); });
-
+            "Focus next hackernews post",
+            function (I) {
+              _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_post_filter, 1 /* down */, "current" ));
+            });
 interactive("hackernews-prev-post",
-            "Highlight prev hackernews item",
-            function (I) { _hackernews_focus_selected(I, _hackernews_next(I, -1 /* up */)); });
+            "Focus previous hackernews post",
+            function (I) { 
+              _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_post_filter, -1 /* up */, "current"));
+            });
+interactive("hackernews-next-comment",
+            "Focus next hackernews comment",
+            function (I) { 
+              _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, 1 /* down */, "current-comment")); 
+            });
+interactive("hackernews-prev-comment",
+            "Focus previous hackernews comment",
+            function (I) { 
+              _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, -1 /* up */, "current-comment")); 
+            });
 
 /*
  * keybindings
@@ -101,6 +131,8 @@ interactive("hackernews-prev-post",
 define_keymap("hackernews_keymap", $display_name = "hackernews");
 define_key(hackernews_keymap, "j", "hackernews-next-post");
 define_key(hackernews_keymap, "k", "hackernews-prev-post");
+define_key(hackernews_keymap, "J", "hackernews-next-comment");
+define_key(hackernews_keymap, "K", "hackernews-prev-comment");
 
 var hackernews_modality = {
   normal: hackernews_keymap
