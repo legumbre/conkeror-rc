@@ -20,15 +20,14 @@ register_user_stylesheet(
         escape (
             "@-moz-document url-prefix(http://news.ycombinator.com/) {" +
                 ".current {" +
-                " // background-color: #CCCCCC !important;" +
-                " // border: 1px dotted #C41 !important;"+
-                " font-weight: bold !important;"+
+                " background-color: #FFCD7D;" +
+                " // padding: -1px;" +
+                " // border: 1px dotted #ff6000 !important;"+
                 "}" +
-                ".current-comment {" +
-                " color: white !important;" +
-                " background-color: #C41 !important;" +
-                " border: 1px dotted #C41 !important;"+
-                " font-weight: bold !important;"+
+                ".current-comment > td.default{" +
+                " // padding: -1px;" +
+                " background-color: #FFCD7D;" +
+                " // border: 1px dotted #ff6000 !important;"+
                 "}" +
             "}"
 ));
@@ -41,7 +40,6 @@ register_user_stylesheet(
  */
 function _hackernews_next(I, dom_filter, direction, marker_class) {
   var nodes = dom_filter(I);
-  // var nodes = Array.filter(I.buffer.document.getElementsByClassName("title"), function (p) { return p.getAttribute("align")!= "right" });
   var cp = nodes.filter(function (p) { return (p.className.indexOf(marker_class) >= 0); });
 
   var current = (cp.length != 0) ? cp[0] : nodes[nodes.length-1] ;
@@ -97,42 +95,64 @@ function _hackernews_post_filter(I)
 
 function _hackernews_comment_filter(I)
 {
-  return Array.filter(I.buffer.document.querySelectorAll("span.comhead a[href^=item]"),
-                      function (p) { return true });
+// yay! xpath encontrado con chrome: 
+// $x("//tr[td[contains(@class,'default')]//span[contains(@class,'comhead')]]")
+  var doc = I.buffer.document;
+  var xpr = xpath_find_any(doc, "//tr[td[contains(@class,'default')]//span[contains(@class,'comhead')]]");
+  var comments = [];  
+  var c;
+  while (c = xpr.iterateNext()) 
+    comments.push(c);  
+  return comments;
+
+//  return Array.filter(I.buffer.document.querySelectorAll("tr"), function (p) { return true });
+//  return Array.filter(I.buffer.document.querySelectorAll("span.comhead a[href^=item]"),
+//                      function (p) { return true });
 }
 
 /*
  * Interactive commands
  */
-interactive("hackernews-next-post",
-            "Focus next hackernews post",
+interactive("hackernews-next-item",
+            "Focus next hackernews post or comment",
             function (I) {
-              _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_post_filter, 1 /* down */, "current" ));
+              if (I.window.content.location.href.match(/.*?\/item\?.*/)) {
+                _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, 1 /* down */, "current-comment")); 
+              }
+              else {
+                _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_post_filter, 1 /* down */, "current" ));
+              }
             });
-interactive("hackernews-prev-post",
-            "Focus previous hackernews post",
+interactive("hackernews-prev-item",
+            "Focus previous hackernews post or comment",
             function (I) { 
-              _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_post_filter, -1 /* up */, "current"));
+              if (I.window.content.location.href.match(/.*?\/item\?.*/)) {
+                _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, -1 /* up */, "current-comment")); 
+              }
+              else {
+                _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_post_filter, -1 /* up */, "current"));
+              }
             });
-interactive("hackernews-next-comment",
-            "Focus next hackernews comment",
-            function (I) { 
-              _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, 1 /* down */, "current-comment")); 
-            });
-interactive("hackernews-prev-comment",
-            "Focus previous hackernews comment",
-            function (I) { 
-              _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, -1 /* up */, "current-comment")); 
-            });
+// interactive("hackernews-next-comment",
+//             "Focus next hackernews comment",
+//             function (I) { 
+//               _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, 1 /* down */, "current-comment")); 
+//             });
+// interactive("hackernews-prev-comment",
+//             "Focus previous hackernews comment",
+//             function (I) { 
+//               _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, -1 /* up */, "current-comment")); 
+//             });
 
 /*
  * keybindings
  */ 
 define_keymap("hackernews_keymap", $display_name = "hackernews");
-define_key(hackernews_keymap, "j", "hackernews-next-post");
-define_key(hackernews_keymap, "k", "hackernews-prev-post");
-define_key(hackernews_keymap, "J", "hackernews-next-comment");
-define_key(hackernews_keymap, "K", "hackernews-prev-comment");
+define_key(hackernews_keymap, "j", "hackernews-next-item");
+define_key(hackernews_keymap, "k", "hackernews-prev-item");
+// define_key(hackernews_keymap, "J", "hackernews-next-comment");
+// define_key(hackernews_keymap, "K", "hackernews-prev-comment");
+define_key(hackernews_keymap, "h", "hackernews-comments");
 
 var hackernews_modality = {
   normal: hackernews_keymap
