@@ -53,13 +53,17 @@ function _hackernews_next(I, dom_filter, direction, marker_class) {
   return next;
 }
 
-function _hackernews_focus_selected(I, el) {
-  var a = I.buffer.document.evaluate(
-    '//*[contains(@class,"current")]//a',
-    el, null, Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE, null);
-  
-  // focus the post's link anchor
-  browser_set_element_focus(I.buffer, a.singleNodeValue, false);
+function _hackernews_focus_post(I, post) {
+  _focus_element(I, post, "a");
+}
+
+function _hackernews_focus_comment(I, comm) {
+  _focus_element(I, comm, "a[href ^= 'item']");
+}
+
+function _focus_element(I, el, selector) {
+  var a = el.querySelector(selector);
+  browser_set_element_focus(I.buffer, a, false);
 
   // scroll into view if necessary
   var boundRect = el.getBoundingClientRect();
@@ -95,8 +99,9 @@ function _hackernews_post_filter(I)
 
 function _hackernews_comment_filter(I)
 {
-// yay! xpath encontrado con chrome: 
-// $x("//tr[td[contains(@class,'default')]//span[contains(@class,'comhead')]]")
+  // Note to future me: easily test xpath expressions with chrome's console:
+  // $x("//tr[td[contains(@class,'default')]//span[contains(@class,'comhead')]]")
+
   var doc = I.buffer.document;
   var xpr = xpath_find_any(doc, "//tr[td[contains(@class,'default')]//span[contains(@class,'comhead')]]");
   var comments = [];  
@@ -104,54 +109,29 @@ function _hackernews_comment_filter(I)
   while (c = xpr.iterateNext()) 
     comments.push(c);  
   return comments;
-
-//  return Array.filter(I.buffer.document.querySelectorAll("tr"), function (p) { return true });
-//  return Array.filter(I.buffer.document.querySelectorAll("span.comhead a[href^=item]"),
-//                      function (p) { return true });
 }
 
 /*
  * Interactive commands
  */
-interactive("hackernews-next-item",
-            "Focus next hackernews post or comment",
+interactive("hackernews-next-post",
+            "Focus next Hacker News post",
             function (I) {
-              if (I.window.content.location.href.match(/.*?\/item\?.*/)) {
-                _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, 1 /* down */, "current-comment")); 
-              }
-              else {
-                _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_post_filter, 1 /* down */, "current" ));
-              }
+              var next_post = _hackernews_next(I, _hackernews_post_filter, 1 /* down */, "current");
+              _hackernews_focus_post(I, next_post);
             });
-interactive("hackernews-prev-item",
-            "Focus previous hackernews post or comment",
+interactive("hackernews-prev-post",
+            "Focus previous Hacker News post",
             function (I) { 
-              if (I.window.content.location.href.match(/.*?\/item\?.*/)) {
-                _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, -1 /* up */, "current-comment")); 
-              }
-              else {
-                _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_post_filter, -1 /* up */, "current"));
-              }
+              var prev_post = _hackernews_next(I, _hackernews_post_filter, -1 /* up */, "current");
+              _hackernews_focus_post(I, prev_post);
             });
-// interactive("hackernews-next-comment",
-//             "Focus next hackernews comment",
-//             function (I) { 
-//               _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, 1 /* down */, "current-comment")); 
-//             });
-// interactive("hackernews-prev-comment",
-//             "Focus previous hackernews comment",
-//             function (I) { 
-//               _hackernews_focus_selected(I, _hackernews_next(I, _hackernews_comment_filter, -1 /* up */, "current-comment")); 
-//             });
-
 /*
  * keybindings
  */ 
-define_keymap("hackernews_keymap", $display_name = "hackernews");
-define_key(hackernews_keymap, "j", "hackernews-next-item");
-define_key(hackernews_keymap, "k", "hackernews-prev-item");
-// define_key(hackernews_keymap, "J", "hackernews-next-comment");
-// define_key(hackernews_keymap, "K", "hackernews-prev-comment");
+define_keymap("hackernews_keymap", $display_name = "HN");
+define_key(hackernews_keymap, "j", "hackernews-next-post");
+define_key(hackernews_keymap, "k", "hackernews-prev-post");
 define_key(hackernews_keymap, "h", "hackernews-comments");
 
 var hackernews_modality = {
@@ -159,9 +139,26 @@ var hackernews_modality = {
 };
 
 define_page_mode("hackernews_mode", 
-                 build_url_regexp($domain = "news.ycombinator",
-                                  $allow_www = true,
-                                  $tlds = ["com"]),
+                 function url_test(uri) {
+                   /* We only want to enable this mode for either the
+                      landing page (empty path) or the following pages
+                      (path = "x?fnid=FOO").  
+
+                      Note that the "comments" page (path =
+                      "item?id=BAR") MUST fail this test; otherwise
+                      both hackernews-mode and
+                      hackernews-comments-mode would be enabled for
+                      the comments page.
+                    */ 
+                   return ( uri.spec.match( build_url_regexp($domain = "news.ycombinator",
+                                                             $allow_www = true,
+                                                             $tlds = ["com"],
+                                                             $path = /$/)) ||
+                            uri.spec.match( build_url_regexp($domain = "news.ycombinator",
+                                                             $allow_www = true,
+                                                             $tlds = ["com"],
+                                                             $path = /x\?.*$/)));
+                 },
                  function enable(buffer) {
                    buffer.content_modalities.push(hackernews_modality);
                    
@@ -187,4 +184,64 @@ define_page_mode("hackernews_mode",
                  $doc = "Hacker News page-mode: navigation for Hacker News." );
 
 page_mode_activate(hackernews_mode);
+
+
+/* helper page-mode for hackernews item view (comments)  */
+
+interactive("hackernews-next-comment",
+            "Focus next Hacker News comment",
+            function (I) {
+              var next_comment = _hackernews_next(I, _hackernews_comment_filter, 1 /* down */, "current-comment");
+              _hackernews_focus_comment(I, next_comment);
+            });
+interactive("hackernews-prev-comment",
+            "Focus previous Hacker News comment",
+            function (I) { 
+              var prev_comment = _hackernews_next(I, _hackernews_comment_filter, -1 /* down */, "current-comment");
+              _hackernews_focus_comment(I, prev_comment);
+            });
+
+/* comments view keybindings*/
+define_keymap("hackernews_comments_keymap", $display_name = "HN comments");
+define_key(hackernews_comments_keymap, "j", "hackernews-next-comment");
+define_key(hackernews_comments_keymap, "k", "hackernews-prev-comment");
+// define_key(hackernews_comments_keymap, "a", "hackernews-reply");
+
+var hackernews_comments_modality = {
+  normal: hackernews_comments_keymap
+};
+
+function _on_hackernews_comments_load(buffer){}
+
+define_page_mode("hackernews_comments_mode", 
+                 build_url_regexp($domain = "news.ycombinator",
+                                  $allow_www = true,
+                                  $tlds = ["com"],
+                                  $path = /item\?.*/),
+                 function enable(buffer) {
+                   buffer.content_modalities.push(hackernews_comments_modality);
+                   
+                   if (buffer.browser.webProgress.isLoadingDocument)
+                     /* arrange so that _on_hackernews_load callback is
+                        called once the document is done loading. */
+                     add_hook.call(buffer, "buffer_loaded_hook", _on_hackernews_comments_load);
+                   else
+                     /* call it right now in case the page-mode
+                      * document is already loaded (ie, someone M-x
+                      * hackernews-mode manually) */
+                     _on_hackernews_comments_load(buffer);
+                 },
+                 function disable(buffer) {
+                   // unregister hooks
+                   remove_hook.call(buffer, "buffer_loaded_hook", _on_hackernews_comments_load);
+                   
+                   var i = buffer.content_modalities.indexOf(hackernews_comments_modality);
+                   if (i > -1)
+                     buffer.content_modalities.splice(i, 1);
+                 },
+                 $display_name = "Hacker News comments",
+                 $doc = "Hacker News comments page-mode: navigation for Hacker News posts comments." );
+page_mode_activate(hackernews_comments_mode);
+
 provide("hackernews");
+
