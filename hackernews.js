@@ -1,11 +1,10 @@
 /**
  * hackernews.js -- A Hacker News page-mode for Conkeror
- * (based on pinboard.js)
  *
- * (C) Copyright 2011 Leonardo Etcheverry <leo@kalio.net>
+ * (C) Copyright 2011, 2012 Leonardo Etcheverry <leo@kalio.net>
  *
- * Usage: use j,k to move to the next/previous post. RET follows
- * the selected post. 
+ * Usage: use `j',`k' to move to the next/previous post. RET follows
+ * the selected post. Use `a' to post a reply while in the comments page.
  *
  **/
 
