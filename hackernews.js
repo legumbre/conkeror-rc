@@ -200,12 +200,24 @@ interactive("hackernews-prev-comment",
               var prev_comment = _hackernews_next(I, _hackernews_comment_filter, -1 /* down */, "current-comment");
               _hackernews_focus_comment(I, prev_comment);
             });
+interactive("hackernews-reply",
+            "Reply to current Hacker News comment or post",
+            function (I) {
+              var doc = I.buffer.document;
+              var reply_link         = doc.querySelector(".current-comment a[href ^= 'reply']");
+              var top_level_textarea = doc.querySelector("textarea[name ^= 'text']"); 
+
+              /* if no current comment selected, follow to top level textarea */
+              var target = reply_link || top_level_textarea;
+              if (target)
+                browser_object_follow(I.buffer, FOLLOW_DEFAULT, target);
+            });
 
 /* comments view keybindings*/
 define_keymap("hackernews_comments_keymap", $display_name = "HN comments");
 define_key(hackernews_comments_keymap, "j", "hackernews-next-comment");
 define_key(hackernews_comments_keymap, "k", "hackernews-prev-comment");
-// define_key(hackernews_comments_keymap, "a", "hackernews-reply");
+define_key(hackernews_comments_keymap, "a", "hackernews-reply");
 
 var hackernews_comments_modality = {
   normal: hackernews_comments_keymap
