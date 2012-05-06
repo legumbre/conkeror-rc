@@ -20,14 +20,10 @@ register_user_stylesheet(
             "@-moz-document url-prefix(http://news.ycombinator.com/) {" +
                 ".current {" +
                 " background-color: #FFCD7D;" +
-                " // padding: -1px;" +
-                " // border: 1px dotted #ff6000 !important;"+
-                "}" +
+                  "}" +
                 ".current-comment > td.default{" +
-                " // padding: -1px;" +
                 " background-color: #FFCD7D;" +
-                " // border: 1px dotted #ff6000 !important;"+
-                "}" +
+                  "}" +
             "}"
 ));
 
