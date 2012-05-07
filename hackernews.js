@@ -12,7 +12,7 @@
  *  - `hackernews-mode' deals with the list of posts (main view)
  *  - `hackernews-comments-mode' deals with a single post comments (comments view)
  *
- * If you change the defaults keybindings, remember to bind the ones
+ * If you change the default keybindings, remember to change the ones
  * for hackernews-comments-mode too if appropriate.
  *
  **/
@@ -28,11 +28,11 @@ register_user_stylesheet(
         escape (
             "@-moz-document url-prefix(http://news.ycombinator.com/) {" +
                 ".current {" +
-                " background-color: #FFCD7D;" +
-                  "}" +
-                ".current-comment > td.default{" +
-                " background-color: #FFCD7D;" +
-                  "}" +
+                "   background-color: #FFCD7D;" +
+                "}" +
+                ".current-comment > td.default {" +
+                "   background-color: #FFCD7D;"   +
+                "}" +
             "}"
 ));
 
@@ -104,9 +104,8 @@ function _hackernews_post_filter(I)
   var p;
   while (p = xpr.iterateNext())
     posts.push(p);
+
   return posts;
-//   return Array.filter(I.buffer.document.getElementsByClassName("title"),
-//                       function (p) { return p.getAttribute("align")!= "right" });
 }
 
 function _hackernews_comment_filter(I)
@@ -120,6 +119,7 @@ function _hackernews_comment_filter(I)
   var c;
   while (c = xpr.iterateNext())
     comments.push(c);
+
   return comments;
 }
 
@@ -297,6 +297,7 @@ define_page_mode("hackernews_comments_mode",
                  },
                  $display_name = "Hacker News comments",
                  $doc = "Hacker News comments page-mode: navigation for Hacker News posts comments." );
+
 page_mode_activate(hackernews_comments_mode);
 
 provide("hackernews");
