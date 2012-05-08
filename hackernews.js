@@ -42,7 +42,7 @@ register_user_stylesheet(
  * circular fashion, according to `direction'. Selecting a post means
  * adding the class maker_class to the selected element.
  */
-function _hackernews_next(I, dom_filter, direction, marker_class) {
+function _hackernews_next (I, dom_filter, direction, marker_class) {
   var nodes = dom_filter(I);
   var cp = nodes.filter(function (p) { return (p.className.indexOf(marker_class) >= 0); });
 
@@ -57,15 +57,15 @@ function _hackernews_next(I, dom_filter, direction, marker_class) {
   return next;
 }
 
-function _hackernews_focus_post(I, post) {
+function _hackernews_focus_post (I, post) {
   _focus_element(I, post, ".title a");
 }
 
-function _hackernews_focus_comment(I, comm) {
+function _hackernews_focus_comment (I, comm) {
   _focus_element(I, comm, "a[href ^= 'item']");
 }
 
-function _focus_element(I, el, selector) {
+function _focus_element (I, el, selector) {
   var a = el.querySelector(selector);
   browser_set_element_focus(I.buffer, a, false);
 
@@ -79,7 +79,7 @@ function _focus_element(I, el, selector) {
 /*
  * _on_hackernews_load will be called by the page-mode's $enable callback
  */
-function _on_hackernews_load(buffer)
+function _on_hackernews_load (buffer)
 {
   _hackernews_fix_link_rel(buffer);
 }
@@ -88,14 +88,14 @@ function _on_hackernews_load(buffer)
  * Add link rel="next" to the "More" link
  * TODO: This should not be necessary once HN fixes its html.
  */
-function _hackernews_fix_link_rel(buffer)
+function _hackernews_fix_link_rel (buffer)
 {
   var els = Array.filter(buffer.document.getElementsByClassName("title"), function (t) {return true});
   var more = buffer.document.evaluate('//a[text()="More"]', buffer.document, null, Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE, null);
   if (more.singleNodeValue) more.singleNodeValue.setAttribute("rel", "next");
 }
 
-function _hackernews_post_filter(I)
+function _hackernews_post_filter (I)
 {
   // $x("//tr[td[contains(@class,'title')]]")
   var doc = I.buffer.document;
@@ -108,7 +108,7 @@ function _hackernews_post_filter(I)
   return posts;
 }
 
-function _hackernews_comment_filter(I)
+function _hackernews_comment_filter (I)
 {
   // Note to future me: easily test xpath expressions with chrome's console:
   // $x("//tr[td[contains(@class,'default')]//span[contains(@class,'comhead')]]")
@@ -171,7 +171,7 @@ var hackernews_modality = {
 };
 
 define_page_mode("hackernews_mode",
-                 function url_test(uri) {
+                 function url_test (uri) {
                    /* We only want to enable this mode for either the
                       landing page (empty path) or the following pages
                       (path = "x?fnid=FOO").
@@ -191,7 +191,7 @@ define_page_mode("hackernews_mode",
                                                              $tlds = ["com"],
                                                              $path = /x\?.*$/)));
                  },
-                 function enable(buffer) {
+                 function enable (buffer) {
                    buffer.content_modalities.push(hackernews_modality);
 
                    if (buffer.browser.webProgress.isLoadingDocument)
@@ -204,7 +204,7 @@ define_page_mode("hackernews_mode",
                       * hackernews-mode manually) */
                      _on_hackernews_load(buffer);
                  },
-                 function disable(buffer) {
+                 function disable (buffer) {
                    // unregister hooks
                    remove_hook.call(buffer, "buffer_loaded_hook", _on_hackernews_load);
 
@@ -267,14 +267,14 @@ var hackernews_comments_modality = {
   normal: hackernews_comments_keymap
 };
 
-function _on_hackernews_comments_load(buffer){}
+function _on_hackernews_comments_load (buffer){}
 
 define_page_mode("hackernews_comments_mode",
                  build_url_regexp($domain = "news.ycombinator",
                                   $allow_www = true,
                                   $tlds = ["com"],
                                   $path = /item\?.*/),
-                 function enable(buffer) {
+                 function enable (buffer) {
                    buffer.content_modalities.push(hackernews_comments_modality);
 
                    if (buffer.browser.webProgress.isLoadingDocument)
@@ -287,7 +287,7 @@ define_page_mode("hackernews_comments_mode",
                       * hackernews-mode manually) */
                      _on_hackernews_comments_load(buffer);
                  },
-                 function disable(buffer) {
+                 function disable (buffer) {
                    // unregister hooks
                    remove_hook.call(buffer, "buffer_loaded_hook", _on_hackernews_comments_load);
 
@@ -301,4 +301,3 @@ define_page_mode("hackernews_comments_mode",
 page_mode_activate(hackernews_comments_mode);
 
 provide("hackernews");
-
