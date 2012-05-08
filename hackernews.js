@@ -45,37 +45,37 @@ register_user_stylesheet(
  * adding the class maker_class to the selected element.
  */
 function hackernews_next_item (I, dom_filter, direction, marker_class) {
-  var nodes = dom_filter(I);
-  var cp = nodes.filter(function (p) { return (p.className.indexOf(marker_class) >= 0); });
+    var nodes = dom_filter(I);
+    var cp = nodes.filter(function (p) { return (p.className.indexOf(marker_class) >= 0); });
 
-  var current = (cp.length != 0) ? cp[0] : nodes[nodes.length-1] ;
-  var nexti = (nodes.indexOf(current) + direction) % nodes.length
-  var next = nodes[nexti]
+    var current = (cp.length != 0) ? cp[0] : nodes[nodes.length-1] ;
+    var nexti = (nodes.indexOf(current) + direction) % nodes.length
+    var next = nodes[nexti]
 
-  if (current)
-    dom_remove_class(current, marker_class);
-  dom_add_class(next, marker_class);
+    if (current)
+        dom_remove_class(current, marker_class);
+    dom_add_class(next, marker_class);
 
-  return next;
+    return next;
 }
 
 function hackernews_focus_post (I, post) {
-  hackernews_focus(I, post, ".title a");
+    hackernews_focus(I, post, ".title a");
 }
 
 function hackernews_focus_comment (I, comm) {
-  hackernews_focus(I, comm, "a[href ^= 'item']");
+    hackernews_focus(I, comm, "a[href ^= 'item']");
 }
 
 function hackernews_focus (I, el, selector) {
-  var a = el.querySelector(selector);
-  browser_set_element_focus(I.buffer, a, false);
+    var a = el.querySelector(selector);
+    browser_set_element_focus(I.buffer, a, false);
 
-  // scroll into view if necessary
-  var boundRect = el.getBoundingClientRect();
-  var win = I.buffer.focused_frame
-  if (boundRect.top < 0 || boundRect.bottom > win.innerHeight)
-    el.scrollIntoView();
+    // scroll into view if necessary
+    var boundRect = el.getBoundingClientRect();
+    var win = I.buffer.focused_frame
+    if (boundRect.top < 0 || boundRect.bottom > win.innerHeight)
+        el.scrollIntoView();
 }
 
 /*
@@ -90,30 +90,30 @@ function hackernews_when_loaded (buffer) {
  * TODO: This should not be necessary once HN fixes its html.
  */
 function hackernews_fix_link_rel (buffer) {
-  var more = buffer.document.evaluate('//a[text()="More"]', buffer.document, null, Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE, null);
-  if (more.singleNodeValue) more.singleNodeValue.setAttribute("rel", "next");
+    var more = buffer.document.evaluate('//a[text()="More"]', buffer.document, null, Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE, null);
+    if (more.singleNodeValue) more.singleNodeValue.setAttribute("rel", "next");
 }
 
 function _hackernews_post_filter (I) {
-  var doc = I.buffer.document;
-  var xpr = xpath_find_any(doc, "//tr[td[contains(@class,'title')]]");
-  var posts = [];
-  var p;
-  while (p = xpr.iterateNext())
-    posts.push(p);
+    var doc = I.buffer.document;
+    var xpr = xpath_find_any(doc, "//tr[td[contains(@class,'title')]]");
+    var posts = [];
+    var p;
+    while (p = xpr.iterateNext())
+        posts.push(p);
 
-  return posts;
+    return posts;
 }
 
 function _hackernews_comment_filter (I) {
-  var doc = I.buffer.document;
-  var xpr = xpath_find_any(doc, "//tr[td[contains(@class,'default')]//span[contains(@class,'comhead')]]");
-  var comments = [];
-  var c;
-  while (c = xpr.iterateNext())
-    comments.push(c);
+    var doc = I.buffer.document;
+    var xpr = xpath_find_any(doc, "//tr[td[contains(@class,'default')]//span[contains(@class,'comhead')]]");
+    var comments = [];
+    var c;
+    while (c = xpr.iterateNext())
+        comments.push(c);
 
-  return comments;
+    return comments;
 }
 
 /*
@@ -161,7 +161,7 @@ define_key(hackernews_keymap, "h", "hackernews-view-comments");
 define_key(hackernews_keymap, ",", "hackernews-vote-up-post");
 
 var hackernews_modality = {
-  normal: hackernews_keymap
+    normal: hackernews_keymap
 };
 
 define_page_mode("hackernews_mode",
@@ -257,7 +257,7 @@ define_key(hackernews_comments_keymap, "a", "hackernews-reply");
 define_key(hackernews_comments_keymap, ",", "hackernews-vote-up-comment");
 
 var hackernews_comments_modality = {
-  normal: hackernews_comments_keymap
+    normal: hackernews_comments_keymap
 };
 
 define_page_mode("hackernews_comments_mode",
