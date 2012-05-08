@@ -15,6 +15,8 @@
  * If you change the default keybindings, remember to change the ones
  * for hackernews-comments-mode too if appropriate.
  *
+ * Use, modification, and distribution are subject to the terms specified in the
+ * COPYING file.
  **/
 
 require("content-buffer.js");
