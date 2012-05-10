@@ -21,7 +21,7 @@
 
 require("content-buffer.js");
 
-define_variable("hackernews_end_behavior", "page", 
+define_variable("hackernews_end_behavior", "page",
     "Controls the behavior of hackernews-next-post and "+
     "hackernews-prev-post when at the last post of the page.  "+
     "Possible values are: 'stop', 'wrap' and 'page'."+
@@ -50,7 +50,7 @@ register_user_stylesheet(
 /* Find the next item using the `dom_filter' function and select it by
  * adding the class `marker_class' to it.  When the last item is
  * reached, the behavior is controlled by the hackernews_end_behavior
- * variable. 
+ * variable.
  */
 function hackernews_next_item (I, dom_filter, marker_class) {
     var doc = I.buffer.document;
@@ -82,7 +82,7 @@ function hackernews_next_item (I, dom_filter, marker_class) {
         return next_page;
     }
 
-    // select the next item by adding marker_class 
+    // select the next item by adding marker_class
     var next = items[next_i]
     if (current)
         dom_remove_class(current, marker_class);
@@ -92,7 +92,7 @@ function hackernews_next_item (I, dom_filter, marker_class) {
 }
 
 /* Find the previous item using the `dom_filter' function and select
- * it by adding the class `marker_class' to it.  
+ * it by adding the class `marker_class' to it.
  */
 function hackernews_prev_item (I, dom_filter, marker_class) {
     var items = dom_filter(I);
@@ -112,7 +112,7 @@ function hackernews_prev_item (I, dom_filter, marker_class) {
     case "page":
         // same as 'stop' since there's no prev page in HN
         // TODO: fix this if HN ever publishes such a link
-        prev_i = (prev_i >= 0) ? prev_i : 0; 
+        prev_i = (prev_i >= 0) ? prev_i : 0;
         break;
     }
     var prev = items[prev_i];
