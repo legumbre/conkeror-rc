@@ -70,8 +70,9 @@ function hackernews_next_item (I, dom_filter, marker_class) {
         next_i = next_i % items.length;
         break;
     case "page":
-        if (next_i == items.length) {
+        if (next_i == items.length) { // at the last item
             next_page = doc.querySelector("a[rel^=next]");
+            next_i = current_i;       // stay at the last item
         }
         break;
     }
