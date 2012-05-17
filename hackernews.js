@@ -247,7 +247,7 @@ define_page_mode("hackernews_mode",
                  uri.spec.match( build_url_regexp($domain = "news.ycombinator",
                                                   $allow_www = true,
                                                   $tlds = ["com"],
-                                                  $path = /news.*/)) ||
+                                                  $path = /new.*/)) ||
                  uri.spec.match( build_url_regexp($domain = "news.ycombinator",
                                                   $allow_www = true,
                                                   $tlds = ["com"],
