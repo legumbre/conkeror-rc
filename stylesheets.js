@@ -1,16 +1,19 @@
 /*
- * My custom stylesheets.
+ * Custom stylesheets
  */
 
+conkerorrc_dir = get_pref('conkeror.rcfile');
+site_css_dir = conkerorrc_dir + "/site-css/";
 
-/* mobile twitter*/
-register_user_stylesheet(
-    "data:text/css," +
-        escape (
-            "@-moz-document url-prefix(https://mobile.twitter.com/) {" +
-                "#container {" +
-                "   width: 98% !important;" +
-                "}" +
-            "}"
-));
+function site_css(filename, url_prefixes) {
+    var styles = read_text_file(make_file(site_css_dir+filename+".css"));
+    var stylesheet = make_css_data_uri([styles], $url_prefixes = url_prefixes);
+    register_user_stylesheet(stylesheet);
+    interactive("toggle-"+filename,"", function() {
+                    unregister_user_stylesheet(stylesheet);
+                });
+}
 
+site_css("hacker-news"    ,["http://news.ycombinator.com"]);
+site_css("mobile-twitter" ,["https://mobile.twitter.com"]);
+site_css("facebook"       ,["https://www.facebook.com"]);

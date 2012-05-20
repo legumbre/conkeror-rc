@@ -1,0 +1,17 @@
+div#rightCol { 
+    display: none !important; 
+} 
+div#groupsNav { 
+    display: none !important; 
+} 
+div#appsNav { 
+    display: none !important; 
+} 
+div#listsNav { 
+    display: none !important; 
+} 
+img.uiProfilePhotoMedium {   
+    height: 48px !important;  
+    width:  48px !important;  
+} 
+
