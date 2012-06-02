@@ -17,3 +17,4 @@ function site_css(filename, url_prefixes) {
 site_css("hacker-news"    ,["http://news.ycombinator.com"]);
 site_css("mobile-twitter" ,["https://mobile.twitter.com"]);
 site_css("facebook"       ,["https://www.facebook.com"]);
+site_css("moodle-iie"     ,["http://iie.fing.edu.uy/cursos"]);

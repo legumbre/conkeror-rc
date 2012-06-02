@@ -1,0 +1,61 @@
+td#left-column {
+    display: none !important;
+}
+
+div.block_section_links {
+    display: none !important;
+}
+
+div.block_calendar_upcoming {
+    display: none !important;
+}
+
+td#right-column {
+    width: 25% !important;
+}
+
+body, td, li, input, select {
+    font-family: Helvetica Neue,sans-serif !important;
+}
+
+div.block_recent_activity li{
+    margin-top: 2px !important;
+    font-family: Helvetica Neue,sans-serif !important;
+    font-size: 13px !important;
+}
+
+div.block_recent_activity li div{
+    margin-top: 0px !important;
+}
+
+div.block_recent_activity li div.head .name{
+    foreground-color: #555 !important;
+}
+div.block_recent_activity li div.head .date{
+    font-size: 12px !important;
+}
+
+div.block_recent_activity li div.info{
+    text-align: right !important;
+}
+
+div.block_recent_activity li div.info a:link{
+    color: #333 !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+}
+
+div.block_recent_activity li div.info a:visited{
+    color: #888 !important;
+    text-decoration: none !important;
+    font-weight: normal !important;
+}
+
+
+div.block_recent_activity li:nth-child(odd) {
+    background-color: #EEE !important;
+}
+
+div.block_recent_activity li:nth-child(even) {
+    background-color: #FFF !important;
+}
