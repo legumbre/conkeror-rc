@@ -1,23 +1,36 @@
-/**
- * hackernews.js -- A Hacker News page-mode for Conkeror
- *
- * (C) Copyright 2011, 2012 Leonardo Etcheverry <leo@kalio.net>
- *
- * Usage: `j',`k':  move to the next/previous post or comment
- *        `h'    :  view the selected post comments
- *        `a'    :  post new reply/comment
- *        `,'    :  vote up the selected post/comment
- *
- * Note that there are actually two page-modes:
- *  - `hackernews-mode' deals with the list of posts (main view)
- *  - `hackernews-comments-mode' deals with a single post (comments view)
- *
- * If you change the default keybindings, remember to change the ones
- * for hackernews-comments-mode too if appropriate.
- *
- * Use, modification, and distribution are subject to the terms specified in the
- * COPYING file.
- **/
+/* hackernews.js -- A Hacker News page-mode for Conkeror
+
+ Copyright (C) 2011, 2012 Leonardo Etcheverry <leo@kalio.net>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+*/
+
+/*
+  Usage : `j',`k':  move to the next/previous post or comment
+  `h'   :  view the selected post comments
+  `a'   :  post new reply/comment
+  `,'   :  vote up the selected post/comment
+
+  Note that there are actually two page-modes:
+  - `hackernews-mode' deals with the list of posts (main view)
+  - `hackernews-comments-mode' deals with a single post (comments view)
+
+  If you change the default keybindings, remember to change the ones
+  for hackernews-comments-mode too if appropriate.
+*/
 
 require("content-buffer.js");
 
