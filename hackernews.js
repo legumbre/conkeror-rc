@@ -49,13 +49,20 @@ define_variable("hackernews_end_behavior", "page",
 register_user_stylesheet(
     "data:text/css," +
         escape (
-            "@-moz-document url-prefix(http://news.ycombinator.com/) {" +
-                ".current {" +
-                "   background-color: #FFCD7D;" +
-                "}" +
-                ".current-comment > td.default {" +
-                "   background-color: #FFCD7D;"   +
-                "}" +
+          "@-moz-document url-prefix(http://news.ycombinator.com/) {" +
+            ".current {" +
+            "   -moz-animation: 2s flash;" +
+            "   background-color: #FCEDCC;" +
+            "}" +
+            "@-moz-keyframes flash { " +
+            "   0%  { background-color: inherit; }" +
+            "   20% { background-color: #FFCD7D; }" +
+            "  100% { background-color: #FCEDCC; }" +
+            "}" +
+            ".current-comment > td.default {" +
+            "   -moz-animation: 2s flash;" +
+            "   background-color: #FCEDCC;" +
+            "}" +
             "}"
 ));
 
