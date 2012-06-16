@@ -58,7 +58,8 @@ define_key(content_buffer_normal_keymap, "M->","cmd_scrollBottom");
 define_key(content_buffer_normal_keymap, "C-x 4 f", "follow-new-buffer");
 
 // use emacsclient as the external EDITOR
-editor_shell_command="emacsclient -a \"\" -c"
+editor_shell_command="emacsclient -a \"\" -c";
+view_source_use_external_editor = true;
 
 // pinboard posting
 interactive("pinboard-post",
