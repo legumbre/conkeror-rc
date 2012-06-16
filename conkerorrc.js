@@ -145,28 +145,7 @@ function content_handler_doc_viewer (ctx) {
 }
 content_handlers.set("application/pdf", content_handler_doc_viewer);
 
-
-// random comments follow
-
-/*  Mozilla calls Conkeror's keypress handler with an event object which has
-    properties describing the event.  The property altKey is true if alt was
-    pressed, and the property metaKey is true if the meta key was pressed.
-    The meta key is defined by gtk as mod4.  Conkeror then uses one or the
-    other of these properties to represent the "M" modifier, depending on the
-    operating system.  You can do some basic diagnostics with a program, xrev,
-    that is in Conkeror's contrib dir:
-
-      cd conkeror/contrib/xrev
-      xulrunner ./application.ini
-*/
-
 // I can get M to work in conkeror under x11-quartz.app with the following ~/xmodmap
 //  clear mod1
 //  clear mod2
 //  add mod4 = Meta_L
-
-// attempted fix at conkeror running under xulrunner-x11 in a mac
-// modifiers.M = new modifier( function (event) { return event.metaKey; }, function (event) { event.metaKey = true; });
-
-//  housekeeping: vacuuming sqlite DBs
-//  find . -name '*.sqlite' -exec sqlite3 -batch -echo '{}' vacuum \;
