@@ -57,6 +57,9 @@ define_key(content_buffer_normal_keymap, "M->","cmd_scrollBottom");
 // misc bindings
 define_key(content_buffer_normal_keymap, "C-x 4 f", "follow-new-buffer");
 
+// use emacsclient as the external EDITOR
+editor_shell_command="emacsclient -a \"\" -c"
+
 // pinboard posting
 interactive("pinboard-post",
             "bookmark the page via pinboard",
