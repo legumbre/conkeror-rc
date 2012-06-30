@@ -45,7 +45,7 @@ fallthrough_keys = ["?",    // show list of commands
 register_user_stylesheet(
     "data:text/css," +
         escape (
-            "@-moz-document url-prefix(http://pinboard.in/) {" +
+            "@-moz-document url-prefix(https://pinboard.in/) {" +
                 ".current {" +
                 " background-color: #FFFFCC !important;" +
                 " // border: 1px dotted #C41 !important;"+
