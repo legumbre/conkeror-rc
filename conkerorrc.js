@@ -48,6 +48,26 @@ add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
 // show loading buffer count widget
 add_hook("mode_line_hook", mode_line_adder(loading_count_widget), true);
 
+// disable scrollbars
+function disable_scrollbars (buffer) {
+    buffer.top_frame.scrollbars.visible = false;
+}
+add_hook("create_buffer_late_hook", disable_scrollbars);
+
+// temporarily turn on scrollbars so as not to break isearch
+var old_isearch_start = (old_isearch_start || isearch_start);
+isearch_start = function (window, direction) {
+    window.buffers.current.browser.contentWindow.scrollbars.visible = true;
+    old_isearch_start(window, direction);
+};
+
+var old_isearch_session_destroy = (old_isearch_session_destroy ||
+                                   isearch_session.prototype.destroy);
+isearch_session.prototype.destroy = function () {
+    this.minibuffer.window.buffers.current.browser.contentWindow.scrollbars.visible = false;
+    old_isearch_session_destroy.call(this);
+};
+
 // conkeror on mac X11 meta workaround
 define_key(default_global_keymap, "x", "execute-extended-command");
 define_key(content_buffer_normal_keymap, "x", "execute-extended-command");
