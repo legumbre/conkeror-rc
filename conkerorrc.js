@@ -140,6 +140,8 @@ interactive("proxy-ec2",
               co_call(call_interactively(I, "proxy-toggle"));
             });
 
+define_key(default_global_keymap, "C-c p", "proxy-toggle");
+
 // xkcd alt text
 xkcd_add_title=true;
 
