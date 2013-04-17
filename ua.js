@@ -9,9 +9,15 @@ var user_agents = { "conkeror": "Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) " +
                     " Safari/534.3",
                   "firefox": "Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) " +
                   "Gecko/20100101 Firefox/8.0.1",
+                    "firefox-mobile": "Mozilla/5.0 (Android; Mobile; rv:13.0)" + 
+                    "Gecko/13.0 Firefox/13.0",
                   "android": "Mozilla/5.0 (Linux; U; Android 2.2; en-us; " +
                   "Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like " +
                   "Gecko) Version/4.0 Mobile Safari/533.1"};
+
+Object.keys = Object.keys || function (o) { var a = []
+  	                                    for (var i in o) a.push(i)
+  	                                    return a } 
 
 var agent_completer = prefix_completer($completions = Object.keys(user_agents));
 
