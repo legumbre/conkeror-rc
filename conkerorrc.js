@@ -68,12 +68,6 @@ isearch_session.prototype.destroy = function () {
     old_isearch_session_destroy.call(this);
 };
 
-// conkeror on mac X11 meta workaround
-define_key(default_global_keymap, "x", "execute-extended-command");
-define_key(content_buffer_normal_keymap, "x", "execute-extended-command");
-define_key(content_buffer_normal_keymap, "M-<","scroll-top-left");
-define_key(content_buffer_normal_keymap, "M->","cmd_scrollBottom");
-
 // misc bindings
 define_key(content_buffer_normal_keymap, "C-x 4 f", "follow-new-buffer");
 
