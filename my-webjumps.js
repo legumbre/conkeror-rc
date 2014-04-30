@@ -4,7 +4,7 @@ define_webjump("fb"   , "https://facebook.com/");
 define_webjump("hn"   , "http://news.ycombinator.com");
 define_webjump("hi"  ,  "https://github.com/dashboard/issues/repos?direction=desc&state=open");
 define_webjump("hub"  , "http://github.com/%s");
-define_webjump("intup", "http://iie.fing.edu.uy/cursos/course/view.php?id=13");
+define_webjump("intup", "https://eva.fing.edu.uy/course/view.php?name=imp");
 define_webjump("itc",   "http://itunesconnect.apple.com");
 define_webjump("mg"   , "https://gist.github.com/mine");
 define_webjump("mi"   , "https://github.com/dashboard/issues");
