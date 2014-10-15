@@ -166,6 +166,12 @@ function content_handler_doc_viewer (ctx) {
 }
 content_handlers.set("application/pdf", content_handler_doc_viewer);
 
+// allow tls 1.2, don't use anything less than tls 1.0, blacklist dumb cipher
+// (thanks wgreenhouse)
+session_pref("security.tls.version.max", 3);
+session_pref("security.tls.version.min", 1);
+session_pref("security.ssl3.rsa_fips_des_ede3_sha", false);
+
 // I can get M to work in conkeror under x11-quartz.app with the following ~/xmodmap
 //  clear mod1
 //  clear mod2
