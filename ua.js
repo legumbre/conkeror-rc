@@ -13,7 +13,11 @@ var user_agents = { "conkeror": "Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) " +
                     "Gecko/13.0 Firefox/13.0",
                   "android": "Mozilla/5.0 (Linux; U; Android 2.2; en-us; " +
                   "Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like " +
-                  "Gecko) Version/4.0 Mobile Safari/533.1"};
+                    "Gecko) Version/4.0 Mobile Safari/533.1",
+                    "google-bot": "Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) " +
+                    "AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25 " + 
+                    "(compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+                  };
 
 Object.keys = Object.keys || function (o) { var a = []
   	                                    for (var i in o) a.push(i)
