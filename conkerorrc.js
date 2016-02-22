@@ -151,20 +151,43 @@ interactive("delete", null,
     $browser_object = browser_object_dom_node);
 define_key(content_buffer_normal_keymap, "d", "delete");
 
-// use Google Docs Viewer (http://docs.google.com/viewer) for pdf files
-// TODO: add this as a option for content_handler_prompt (the default dialog)
-//       or maybe override "view internally" the option to trigger this handler      
-function content_handler_doc_viewer (ctx) {
+// Ask whether to use Google Docs Viewer for pdf files
+function content_handler_pdf_prompt (ctx) {
+    var action_chosen = false;
+    var panel;
+    try {
+        var action = yield ctx.window.minibuffer.read_single_character_option(
+            $prompt = "Action to perform: (s: save; c: copy URL; i: view in Google Docs Viewer)",
+            $options = ["s", "c", "i"]);
+        switch (action) {
+        case "s":
+            yield content_handler_save(ctx);
+            action_chosen = true;
+            break;
+        case "c":
+            yield content_handler_copy_url(ctx);
+            action_chosen = true;
+            break;
+        case "i":
+            action_chosen = true;
+            yield content_handler_doc_viewer(ctx)
+            break;
+        }
+    } catch (e) {
+        handle_interactive_error(ctx.window, e);
+    } finally {
+        if (!action_chosen)
+            ctx.abort();
+    }
+}
+
+function content_handler_doc_viewer(ctx) {
     ctx.abort(); // abort the download
     let uri = ctx.launcher.source.spec;
     let docviewuri = "http://docs.google.com/viewer?url=" + encodeURI(uri);
     ctx.frame.location = docviewuri;
-
-    // copy original url to clipboard
-    writeToClipboard(uri);
-    ctx.window.minibuffer.message("Copied: " + uri);
 }
-content_handlers.set("application/pdf", content_handler_doc_viewer);
+content_handlers.set("application/pdf", content_handler_pdf_prompt);
 
 // allow tls 1.2, don't use anything less than tls 1.0, blacklist dumb cipher
 // (thanks wgreenhouse)
